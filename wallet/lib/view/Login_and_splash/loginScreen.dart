@@ -1,5 +1,11 @@
+// ignore_for_file: depend_on_referenced_packages, avoid_print
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:wallet/view/Login_and_splash/passwordEnter.dart';
+import 'package:wallet/widgets/myNumberTextFild.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -9,6 +15,9 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController controller = TextEditingController();
+  PhoneNumber number = PhoneNumber(dialCode: "+91");
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,37 +62,59 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(
                     height: 24,
                   ),
-                  const Text("Mobail Number"),
-                  SizedBox(
-                    height: 45,
-                    child: TextField(
-                      decoration: InputDecoration(
-                        
-                          prefix: Image.asset("assets/login/jordanFlag.png"),
-                          contentPadding: EdgeInsets.only(top: 10, left: 20),
-                          hintText: "7x-xxxxxxx",
-                          border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: const Color.fromARGB(
-                                      255, 202, 199, 199)))),
-                    ),
-                  ),
-                  //
+                  MyNumberTextFild(controller: controller),
+                  // const Text("Mobail Number"),
+                  // Container(
+                  //   // height: 50,
+                  //   decoration: BoxDecoration(
+                  //     border: Border.all(width: 1, color: Colors.grey),
+                  //     borderRadius: BorderRadius.circular(2),
+                  //   ),
+                  //   child: InternationalPhoneNumberInput(
+                  //     onInputChanged: (PhoneNumber number) {
+                  //       print(number.phoneNumber);
+                  //     },
+
+                  //     selectorConfig: const SelectorConfig(
+                  //       selectorType: PhoneInputSelectorType.DROPDOWN,
+                  //     ),
+
+                  //     // autoValidateMode: AutovalidateMode.disabled,
+
+                  //     initialValue: number,
+                  //     textFieldController: controller,
+                  //     keyboardType: const TextInputType.numberWithOptions(
+                  //         signed: true, decimal: true),
+                  //     inputDecoration: const InputDecoration(
+                  //         hintText: "7xx-xxxxx",
+                  //         hintStyle: TextStyle(color: Colors.grey),
+                  //         focusedBorder: InputBorder.none,
+                  //         border: InputBorder.none,
+                  //         errorBorder: InputBorder.none,
+                  //         enabledBorder: InputBorder.none),
+                  //   ),
+                  // ),
+
                   const SizedBox(
                     height: 24,
                   ),
-                  Container(
-                    height: 45,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: const Color.fromRGBO(87, 50, 191, 1)),
-                    child: const Text(
-                      "Continue",
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white),
+                  GestureDetector(
+                    onTap: () {
+                      _validateAndShowDialog();
+                    },
+                    child: Container(
+                      height: 45,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: const Color.fromRGBO(87, 50, 191, 1)),
+                      child: const Text(
+                        "Continue",
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white),
+                      ),
                     ),
                   ),
                   const SizedBox(
@@ -145,5 +176,38 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+// number validation sathi finction
+  void _validateAndShowDialog() {
+    String phoneNumber = controller.text;
+    if (phoneNumber.length != 10 ||
+        !RegExp(r'^[0-9]+$').hasMatch(phoneNumber)) {
+      _showErrorDialog();
+    } else {
+      Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return const EnterPassword();
+      }));
+    }
+  }
+
+// for show dialog box is number is not validate
+  void _showErrorDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Invalid Number'),
+            content: const Text('Please enter a valid mobile number.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        });
   }
 }
