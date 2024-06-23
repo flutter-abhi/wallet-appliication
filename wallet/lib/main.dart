@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:wallet/controller/TransitionController.dart';
 import 'package:wallet/view/Login_and_splash/splashScreen.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MainApp());
@@ -10,8 +12,16 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: SplashScrren(),
+    return MultiProvider(
+      providers: [
+        Provider(create: (context) {
+          return TransactionController();
+        })
+      ],
+      child: const MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: SplashScrren(),
+      ),
     );
   }
 }
