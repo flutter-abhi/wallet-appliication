@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 class TextfildGenral extends StatefulWidget {
   String? hintText;
   Icon? suffixIcon;
-  TextfildGenral({super.key, this.hintText, this.suffixIcon});
+  Icon? prefixIcon;
+  TextfildGenral({super.key, this.hintText, this.suffixIcon, this.prefixIcon});
 
   @override
   State<TextfildGenral> createState() => _TextfildGenralState();
@@ -18,6 +19,7 @@ class _TextfildGenralState extends State<TextfildGenral> {
       height: 45,
       child: TextField(
         decoration: InputDecoration(
+            prefixIcon: widget.prefixIcon,
             border: const OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.grey)),
             hintText: widget.hintText,
