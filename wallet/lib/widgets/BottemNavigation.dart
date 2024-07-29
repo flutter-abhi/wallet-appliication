@@ -1,7 +1,9 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:wallet/view/Cards/Cards.dart';
 import 'package:wallet/view/MainScreens/HistoryScreen.dart';
+import 'package:wallet/view/MainScreens/MoreScreen.dart';
 import 'package:wallet/view/MainScreens/homeScreen.dart';
 
 class MyBottomBar extends StatefulWidget {
@@ -46,8 +48,16 @@ class _MyBottomBarState extends State<MyBottomBar> {
         return const HomeScreen();
       }));
     } else if (index == 1) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
         return const HistoryScreen();
+      }));
+    } else if (index == 2) {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+        return const CardsDisplay();
+      }));
+    } else if (index == 3) {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+        return const MoreScreen();
       }));
     }
   }

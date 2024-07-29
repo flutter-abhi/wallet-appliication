@@ -1,3 +1,5 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:flutter/material.dart';
 import 'package:wallet/controller/TransitionController.dart';
 import 'package:wallet/view/Login_and_splash/splashScreen.dart';
@@ -14,9 +16,9 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        Provider(create: (context) {
+        ChangeNotifierProvider(create: (context) {
           return TransactionController();
-        })
+        }),
       ],
       child: const MaterialApp(
         debugShowCheckedModeBanner: false,

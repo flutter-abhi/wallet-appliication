@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/controller/TransitionController.dart';
+import 'package:wallet/model/TranasationModelClass.dart';
 import 'package:wallet/widgets/BottemNavigation.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet/widgets/textFildgenrel.dart';
@@ -127,85 +128,99 @@ class _HistoryScreenState extends State<HistoryScreen> {
                               .transactionAcrodingToDate[i]
                               .length,
                           itemBuilder: (context, index) {
-                            return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                children: [
-                                  SizedBox(
-                                    height: 36,
-                                    width: 36,
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(10),
-                                      child: Image.asset(
-                                        Provider.of<TransactionController>(
-                                                context)
-                                            .transactionAcrodingToDate[i][index]
-                                            .image,
-                                        height: 37,
-                                        width: 37,
+                            return GestureDetector(
+                              onTap: () {
+                                _myBottomSheet(
+                                    Provider.of<TransactionController>(context,
+                                            listen: false)
+                                        .transactionAcrodingToDate[i][index]);
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  children: [
+                                    SizedBox(
+                                      height: 36,
+                                      width: 36,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(10),
+                                        child: Image.asset(
+                                          Provider.of<TransactionController>(
+                                                  context)
+                                              .transactionAcrodingToDate[i]
+                                                  [index]
+                                              .image,
+                                          height: 37,
+                                          width: 37,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Column(
-                                    children: [
-                                      Text(
-                                        Provider.of<TransactionController>(
-                                                context)
-                                            .transactionAcrodingToDate[i][index]
-                                            .title,
-                                        style: const TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            Provider.of<TransactionController>(
-                                                    context)
-                                                .transactionAcrodingToDate[i]
-                                                    [index]
-                                                .date,
-                                            style: const TextStyle(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w400,
-                                                color: Colors.grey),
-                                          ),
-                                          Text(
-                                            Provider.of<TransactionController>(
-                                                    context)
-                                                .transactionAcrodingToDate[i]
-                                                    [index]
-                                                .time,
-                                            style: const TextStyle(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w400,
-                                                color: Colors.grey),
-                                          )
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                  const Spacer(),
-                                  Text(
-                                    "\$ ${Provider.of<TransactionController>(context).transactionAcrodingToDate[i][index].amount}",
-                                    style: (Provider.of<TransactionController>(
-                                                context)
-                                            .transactionAcrodingToDate[i][index]
-                                            .isCredited)
-                                        ? const TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w400,
-                                            color: Colors.green)
-                                        : const TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w400,
-                                            color: Colors.red),
-                                  ),
-                                  const Text(" >")
-                                ],
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          Provider.of<TransactionController>(
+                                                  context)
+                                              .transactionAcrodingToDate[i]
+                                                  [index]
+                                              .title,
+                                          style: const TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              Provider.of<TransactionController>(
+                                                      context)
+                                                  .transactionAcrodingToDate[i]
+                                                      [index]
+                                                  .date,
+                                              style: const TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: Colors.grey),
+                                            ),
+                                            Text(
+                                              Provider.of<TransactionController>(
+                                                      context)
+                                                  .transactionAcrodingToDate[i]
+                                                      [index]
+                                                  .time,
+                                              style: const TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: Colors.grey),
+                                            )
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                    const Spacer(),
+                                    Text(
+                                      "\$ ${Provider.of<TransactionController>(context).transactionAcrodingToDate[i][index].amount}",
+                                      style:
+                                          (Provider.of<TransactionController>(
+                                                      context)
+                                                  .transactionAcrodingToDate[i]
+                                                      [index]
+                                                  .isCredited)
+                                              ? const TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: Colors.green)
+                                              : const TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: Colors.red),
+                                    ),
+                                    const Text(" >")
+                                  ],
+                                ),
                               ),
                             );
                           });
@@ -221,5 +236,177 @@ class _HistoryScreenState extends State<HistoryScreen> {
         index: 1,
       ),
     );
+  }
+
+  void _myBottomSheet(Transation traObj) {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Container(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  children: [
+                    SizedBox(
+                      height: 56,
+                      width: 56,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.asset(
+                          traObj.image,
+                          height: 37,
+                          width: 37,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          traObj.title,
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w600),
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              traObj.date,
+                              style: const TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.grey),
+                            ),
+                            Text(
+                              traObj.time,
+                              style: const TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.grey),
+                            )
+                          ],
+                        )
+                      ],
+                    ),
+                    const Spacer(),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text(
+                          "Done",
+                          style: TextStyle(
+                              fontSize: 14,
+                              color: Color.fromRGBO(29, 98, 202, 1)),
+                        ))
+                  ],
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  height: 65,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 242, 230, 230),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    "${traObj.isCredited ? "+" : "-"} \$ ${traObj.amount}",
+                    style: TextStyle(
+                        fontSize: 21,
+                        fontWeight: FontWeight.w600,
+                        color: traObj.isCredited ? Colors.green : Colors.red),
+                  ),
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                Container(
+                    padding: const EdgeInsets.all(10),
+                    height: 65,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(width: 1, color: Colors.grey)),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          traObj.date,
+                          style:
+                              const TextStyle(fontSize: 12, color: Colors.grey),
+                        ),
+                        Text(
+                          "${traObj.date} ${traObj.time}",
+                          style: const TextStyle(fontSize: 14),
+                        )
+                      ],
+                    )),
+                const SizedBox(
+                  height: 5,
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  height: 65,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(width: 1, color: Colors.grey)),
+                  child: const Row(
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Transaction no.",
+                            style: TextStyle(fontSize: 12, color: Colors.grey),
+                          ),
+                          Text(
+                            "23010412432431",
+                            style: TextStyle(fontSize: 14),
+                          )
+                        ],
+                      ),
+                      Spacer(),
+                      Icon(
+                        Icons.copy,
+                        size: 24,
+                      )
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 24,
+                ),
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.flag,
+                      color: Colors.red,
+                      size: 22,
+                    ),
+                    Text(
+                      "Report a Problem",
+                      style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600),
+                    )
+                  ],
+                ),
+              ],
+            ),
+          );
+        });
   }
 }
