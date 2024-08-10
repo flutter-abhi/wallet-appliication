@@ -1,8 +1,12 @@
 // home_screen.dart
 
-import 'package:flutter/material.dart';
-import 'package:wallet/widgets/BottemNavigation.dart';
+import 'dart:developer';
 
+import 'package:flutter/material.dart';
+import 'package:wallet/controller/login.dart';
+import 'package:wallet/view/MainScreens/setting.dart';
+import 'package:wallet/widgets/BottemNavigation.dart';
+import "package:provider/provider.dart";
 import 'package:wallet/widgets/lastest_transfer.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -15,6 +19,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
+    log(Provider.of<LoginProvider>(context).user.firstName);
     return Scaffold(
       backgroundColor: const Color.fromRGBO(39, 6, 133, 1),
 
@@ -24,10 +29,10 @@ class _HomeScreenState extends State<HomeScreen> {
         leading: ClipOval(
           child: Image.asset("assets/home/user1.png"),
         ),
-        title: const Column(
+        title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               "Hello",
               style: TextStyle(
                   color: Colors.white,
@@ -35,20 +40,27 @@ class _HomeScreenState extends State<HomeScreen> {
                   fontSize: 14),
             ),
             Text(
-              "Rushikesh!",
-              style: TextStyle(
+              Provider.of<LoginProvider>(context).user.firstName,
+              style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w600,
                   fontSize: 14),
             ),
           ],
         ),
-        actions: const [
-          Icon(
-            Icons.settings_outlined,
-            color: Colors.white,
+        actions: [
+          GestureDetector(
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return const MyProfile();
+              }));
+            },
+            child: const Icon(
+              Icons.settings_outlined,
+              color: Colors.white,
+            ),
           ),
-          SizedBox(
+          const SizedBox(
             width: 15,
           )
         ],
@@ -81,12 +93,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         fontWeight: FontWeight.w400,
                         fontSize: 12),
                   ),
-                  const Text(
-                    "\$14,235",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 36),
+                  Text(
+                    "₹ ${Provider.of<LoginProvider>(context).user.walletBalance!.toStringAsFixed(2)}",
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 36,
+                    ),
                   ),
                   const SizedBox(
                     height: 16,

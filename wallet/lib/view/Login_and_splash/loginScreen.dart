@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:wallet/controller/login.dart';
 import 'package:wallet/view/Login_and_splash/passwordEnter.dart';
 import 'package:wallet/widgets/myNumberTextFild.dart';
 
@@ -99,7 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: 24,
                   ),
                   GestureDetector(
-                    onTap: () {
+                    onTap: () async {
                       _validateAndShowDialog();
                     },
                     child: Container(
@@ -181,12 +182,11 @@ class _LoginScreenState extends State<LoginScreen> {
 // number validation sathi finction
   void _validateAndShowDialog() {
     String phoneNumber = controller.text;
-    if (phoneNumber.length != 10 ||
-        !RegExp(r'^[0-9]+$').hasMatch(phoneNumber)) {
+    if (phoneNumber.length < 10 || !RegExp(r'^[0-9]+$').hasMatch(phoneNumber)) {
       _showErrorDialog();
     } else {
       Navigator.push(context, MaterialPageRoute(builder: (context) {
-        return const EnterPassword();
+        return EnterPassword(contact: phoneNumber);
       }));
     }
   }

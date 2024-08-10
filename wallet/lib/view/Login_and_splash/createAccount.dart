@@ -1,18 +1,38 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:wallet/controller/login.dart';
 import 'package:wallet/view/Login_and_splash/Otp1.dart';
 import 'package:wallet/widgets/textFildgenrel.dart';
+import "package:provider/provider.dart";
 
 class CreateAccount extends StatefulWidget {
-  const CreateAccount({super.key});
+  final String contact;
+  const CreateAccount({
+    required this.contact,
+    super.key,
+  });
 
   @override
   State<CreateAccount> createState() => _CreateAccountState();
 }
 
 class _CreateAccountState extends State<CreateAccount> {
+  ////
+  ///
+  TextEditingController password = TextEditingController();
+  TextEditingController email = TextEditingController();
+  TextEditingController firstName = TextEditingController();
+  TextEditingController lastName = TextEditingController();
+
+  bool isVisible = false;
+  bool isBiller = false;
+  bool isAccept = false;
   @override
   Widget build(BuildContext context) {
+    final loginCon = Provider.of<LoginProvider>(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -53,41 +73,146 @@ class _CreateAccountState extends State<CreateAccount> {
             const SizedBox(
               height: 24,
             ),
-            const Text("Name"),
-            TextfildGenral(
-              hintText: "e.g.John Doe",
+
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text("firstName"),
+                Text("last name"),
+              ],
             ),
+            const SizedBox(
+              height: 10,
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  height: 45,
+                  width: 150,
+                  child: TextField(
+                    controller: firstName,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)),
+                      hintText: "e.g.John ",
+                      hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                SizedBox(
+                  height: 45,
+                  width: 150,
+                  child: TextField(
+                    controller: lastName,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)),
+                      hintText: "e.g. Doe",
+                      hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+
             const SizedBox(
               height: 24,
             ),
             const Text("Email"),
-            TextfildGenral(
-              hintText: "e.g.email@example.com",
+            SizedBox(
+              height: 45,
+              child: TextField(
+                controller: email,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey)),
+                  hintText: "e.g.email@example.com",
+                  hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
+                ),
+              ),
             ),
+
             const SizedBox(
               height: 24,
             ),
             const Text("Password"),
-            TextfildGenral(
-              suffixIcon: const Icon(Icons.visibility_off),
-              hintText: "e.g.email@example.com",
+            SizedBox(
+              height: 45,
+              child: TextField(
+                obscureText: !isVisible,
+                controller: password,
+                decoration: InputDecoration(
+                    border: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey)),
+                    hintText: "Enter Your Password",
+                    hintStyle:
+                        const TextStyle(color: Colors.grey, fontSize: 14),
+                    suffixIcon: GestureDetector(
+                      onTap: () {
+                        isVisible = !isVisible;
+                        setState(() {});
+                      },
+                      child: Icon((!isVisible)
+                          ? Icons.visibility_off_outlined
+                          : Icons.visibility),
+                    )),
+              ),
+            ),
+            //
+            const SizedBox(
+              height: 24,
+            ),
+            GestureDetector(
+              onTap: () {
+                isBiller = !isBiller;
+                setState(() {});
+              },
+              child: Row(
+                children: [
+                  Icon(
+                    (!isBiller)
+                        ? Icons.check_box_outline_blank
+                        : Icons.check_box_outlined,
+                    size: 24,
+                  ),
+                  const Text(
+                    "   SignUp as a Biller",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  )
+                ],
+              ),
             ),
             const SizedBox(
               height: 24,
             ),
-            const Row(
-              children: [
-                Icon(
-                  Icons.check_box_outline_blank,
-                  size: 20,
+
+            GestureDetector(
+              onTap: () {
+                isAccept = !isAccept;
+                setState(() {});
+              },
+              child: SizedBox(
+                child: Row(
+                  children: [
+                    Icon(
+                      (!isAccept)
+                          ? Icons.check_box_outline_blank
+                          : Icons.check_box_outlined,
+                      size: 24,
+                    ),
+                    const Text(" I accept "),
+                    const Text(
+                      "Terms and Condition ",
+                      style: TextStyle(color: Color.fromRGBO(29, 98, 202, 1)),
+                    ),
+                    const Text("and "),
+                  ],
                 ),
-                Text(" I accept "),
-                Text(
-                  "Terms and Condition ",
-                  style: TextStyle(color: Color.fromRGBO(29, 98, 202, 1)),
-                ),
-                Text("and "),
-              ],
+              ),
             ),
             const Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -102,10 +227,33 @@ class _CreateAccountState extends State<CreateAccount> {
               height: 49,
             ),
             GestureDetector(
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return const Otp1();
-                }));
+              onTap: () async {
+                //login karuya okkk
+
+                if (isAccept) {
+                  String? resmessage = await loginCon.signUp(
+                      contact: widget.contact,
+                      pass: password.text,
+                      firstName: firstName.text,
+                      lastName: lastName.text,
+                      email: email.text,
+                      type: (isBiller) ? "biller" : "user");
+
+                  ///check whether login or not
+                  bool success = loginCon.success;
+
+                  if (success) {
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) {
+                      return Otp1(contact: widget.contact);
+                    }));
+                  } else {
+                    _showErrorDialog(resmessage!);
+                  }
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text("Accept terms and condition")));
+                }
               },
               child: Container(
                 height: 45,
@@ -113,13 +261,17 @@ class _CreateAccountState extends State<CreateAccount> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5),
                     color: const Color.fromRGBO(87, 50, 191, 1)),
-                child: const Text(
-                  "Create a new account",
-                  style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white),
-                ),
+                child: (!loginCon.isLoading)
+                    ? const Text(
+                        "Create a new account",
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white),
+                      )
+                    : const CircularProgressIndicator(
+                        color: Colors.white,
+                      ),
               ),
             ),
             const SizedBox(
@@ -177,5 +329,24 @@ class _CreateAccountState extends State<CreateAccount> {
         ),
       ),
     );
+  }
+
+  void _showErrorDialog(String msg) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Sign Up failed'),
+            content: Text(msg),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        });
   }
 }

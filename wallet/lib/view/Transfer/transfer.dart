@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:wallet/view/MainScreens/MoreScreen.dart';
+import 'package:wallet/view/Transfer/TransferToBeneficiary.dart';
 
 class Users {
   String img;
@@ -144,46 +145,60 @@ class _TransferToState extends State<TransferTo> {
               height: 350,
               child: ListView.separated(
                   itemBuilder: (context, index) {
-                    return Row(
-                      children: [
-                        Container(
-                          height: 65,
-                          width: 65,
-                          decoration: const BoxDecoration(
-                              color: Color.fromRGBO(230, 221, 255, 1),
-                              shape: BoxShape.circle),
-                          alignment: Alignment.center,
-                          child: ClipOval(
-                            child: Image.asset(userList[index].img),
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 20,
-                        ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return TransferToBenifitial(
+                            userobj: userList[index],
+                          );
+                        }));
+                      },
+                      child: Container(
+                        color: Colors.white,
+                        child: Row(
                           children: [
-                            Text(
-                              userList[index].name,
-                              style: const TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.w600),
+                            Container(
+                              height: 65,
+                              width: 65,
+                              decoration: const BoxDecoration(
+                                  color: Color.fromRGBO(230, 221, 255, 1),
+                                  shape: BoxShape.circle),
+                              alignment: Alignment.center,
+                              child: ClipOval(
+                                child: Image.asset(userList[index].img),
+                              ),
                             ),
-                            Text(
-                              userList[index].contact,
-                              style: const TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.grey),
+                            const SizedBox(
+                              width: 20,
                             ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  userList[index].name,
+                                  style: const TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                Text(
+                                  userList[index].contact,
+                                  style: const TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.grey),
+                                ),
+                              ],
+                            ),
+                            const Spacer(),
+                            const Text(
+                              ">",
+                              style: TextStyle(fontSize: 20),
+                            )
                           ],
                         ),
-                        const Spacer(),
-                        const Text(
-                          ">",
-                          style: TextStyle(fontSize: 20),
-                        )
-                      ],
+                      ),
                     );
                   },
                   separatorBuilder: ((context, index) => const Divider()),

@@ -1,22 +1,29 @@
 import 'dart:developer';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import "package:provider/provider.dart";
+import 'package:wallet/controller/login.dart';
+import 'package:wallet/view/Login_and_splash/Otp1.dart';
 import 'package:wallet/view/Login_and_splash/createAccount.dart';
+import 'package:wallet/view/MainScreens/homeScreen.dart';
 import 'package:wallet/widgets/myNumberTextFild.dart';
 import 'package:wallet/widgets/textFildgenrel.dart';
 
 class EnterPassword extends StatefulWidget {
-  const EnterPassword({super.key});
+  final String contact;
+  const EnterPassword({super.key, required this.contact});
 
   @override
   State<EnterPassword> createState() => _EnterPasswordState();
 }
 
 class _EnterPasswordState extends State<EnterPassword> {
+  final TextEditingController password = TextEditingController();
+  bool isVisible = false;
+
   @override
   Widget build(BuildContext context) {
+    final loginCon = Provider.of<LoginProvider>(context, listen: false);
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 238, 233, 255),
       appBar: AppBar(
@@ -74,28 +81,49 @@ class _EnterPasswordState extends State<EnterPassword> {
                     height: 24,
                   ),
                   const Text("Password"),
-                  TextfildGenral(
-                    hintText: "Enter Your Password",
-                    suffixIcon: const Icon(Icons.visibility_off_outlined),
+                  SizedBox(
+                    height: 45,
+                    child: TextField(
+                      obscureText: !isVisible,
+                      controller: password,
+                      decoration: InputDecoration(
+                          border: const OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.grey)),
+                          hintText: "Enter Your Password",
+                          hintStyle:
+                              const TextStyle(color: Colors.grey, fontSize: 14),
+                          suffixIcon: GestureDetector(
+                            onTap: () {
+                              isVisible = !isVisible;
+                              setState(() {});
+                            },
+                            child: Icon((!isVisible)
+                                ? Icons.visibility_off_outlined
+                                : Icons.visibility),
+                          )),
+                    ),
                   ),
-                  // const SizedBox(
-                  //   height: 45,
-                  //   child: TextField(
-                  //     decoration: InputDecoration(
-                  //         border: OutlineInputBorder(
-                  //             borderSide: BorderSide(color: Colors.grey)),
-                  //         hintText: "Enter Your Password",
-                  //         hintStyle:
-                  //             TextStyle(color: Colors.grey, fontSize: 14),
-                  //         suffixIcon: Icon(Icons.visibility_off_outlined)),
-                  //   ),
-                  // ),
                   const SizedBox(
                     height: 16,
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      GestureDetector(
+                          onTap: () {
+                            //navigate to sign up page
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              return CreateAccount(contact: widget.contact);
+                            }));
+                            ////
+                            ///
+                          },
+                          child: const Text(
+                            "Don't have an account",
+                            style: TextStyle(
+                                color: Color.fromRGBO(29, 98, 202, 1)),
+                          )),
                       GestureDetector(
                           onTap: () {
                             myBottomSheetEmail();
@@ -109,11 +137,23 @@ class _EnterPasswordState extends State<EnterPassword> {
                   ),
                   const Spacer(),
                   GestureDetector(
-                    onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return const CreateAccount();
-                      }));
+                    onTap: () async {
+                      //login karuya okkk
+
+                      String? resmessage = await loginCon.login(
+                          contact: widget.contact, pass: password.text);
+
+                      ///check whether login or not
+                      bool success = loginCon.success;
+
+                      if (success) {
+                        Navigator.pushReplacement(context,
+                            MaterialPageRoute(builder: (context) {
+                          return Otp1(contact: widget.contact);
+                        }));
+                      } else {
+                        _showErrorDialog(resmessage!);
+                      }
                     },
                     child: Container(
                       height: 45,
@@ -121,13 +161,17 @@ class _EnterPasswordState extends State<EnterPassword> {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5),
                           color: const Color.fromRGBO(87, 50, 191, 1)),
-                      child: const Text(
-                        "Login",
-                        style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white),
-                      ),
+                      child: (!loginCon.isLoading)
+                          ? const Text(
+                              "Login",
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white),
+                            )
+                          : const CircularProgressIndicator(
+                              color: Colors.white,
+                            ),
                     ),
                   ),
                   const SizedBox(
@@ -140,6 +184,26 @@ class _EnterPasswordState extends State<EnterPassword> {
         ),
       ),
     );
+  }
+
+//
+  void _showErrorDialog(String msg) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Login failed'),
+            content: Text(msg),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        });
   }
 
 // for opning the bottom sheet we use this
