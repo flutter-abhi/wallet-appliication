@@ -56,7 +56,8 @@ class LoginProvider with ChangeNotifier {
               email: resdata["user"]["email"],
               id: resdata["user"]["_id"],
               type: resdata["user"]["type"],
-              walletBalance: resdata["user"]["walletBalance"]);
+              walletBalance: resdata["user"]["walletBalance"],
+              image: resdata["user"]["image"]);
 
           notifyListeners(); // Notify listeners about the change
           return "login successfull";
@@ -128,7 +129,8 @@ class LoginProvider with ChangeNotifier {
               email: data["user"]["email"],
               id: data["user"]["_id"],
               type: data["user"]["type"],
-              walletBalance: data["user"]["walletBalance"]);
+              walletBalance: data["user"]["walletBalance"],
+              image: data["user"]["image"]);
           notifyListeners(); // Notify listeners about the change
           return "Sign Up successfull";
         } else {
@@ -173,7 +175,8 @@ class LoginProvider with ChangeNotifier {
             email: data["user"]["email"],
             id: data["user"]["_id"],
             type: data["user"]["type"],
-            walletBalance: data["user"]["walletBalance"]);
+            walletBalance: data["user"]["walletBalance"],
+            image: data["user"]["image"]);
         _isAlreadyLoggedin = true;
         notifyListeners();
       }

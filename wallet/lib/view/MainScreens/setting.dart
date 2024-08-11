@@ -1,5 +1,9 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:flutter/material.dart';
-import 'package:wallet/model/User.dart';
+
+import 'package:wallet/controller/login.dart';
+import 'package:provider/provider.dart';
 
 class MyProfile extends StatefulWidget {
   const MyProfile({super.key});
@@ -23,28 +27,34 @@ class _MyProfileState extends State<MyProfile> {
         padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
-            Container(
-              height: 100,
-              width: 100,
-              decoration: BoxDecoration(
-                  border: Border.all(
-                      color: const Color.fromRGBO(79, 188, 168, 1), width: 2),
-                  color: const Color.fromRGBO(230, 221, 255, 1),
-                  shape: BoxShape.circle),
-              alignment: Alignment.center,
-              child: ClipOval(
+            ClipOval(
+              child: Container(
+                height: 100,
+                width: 100,
+                decoration: BoxDecoration(
+                    border: Border.all(
+                        color: const Color.fromRGBO(79, 188, 168, 1), width: 2),
+                    color: const Color.fromRGBO(230, 221, 255, 1),
+                    shape: BoxShape.circle),
+                alignment: Alignment.center,
+
                 ///profile image
                 /////
                 ///
-                child: Image.asset(user.img),
+                child: Image.network(
+                  (Provider.of<LoginProvider>(context).user.image == null)
+                      ? "https://i.pinimg.com/736x/2a/7d/4c/2a7d4c4bc1381a476b8b8a85885ac392.jpg"
+                      : Provider.of<LoginProvider>(context).user.image!,
+                  fit: BoxFit.contain,
+                ),
               ),
             ),
             Text(
-              user.name,
+              Provider.of<LoginProvider>(context).user.firstName,
               style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
             ),
             Text(
-              " Joined ${user.joinAt}",
+              " Joined ${Provider.of<LoginProvider>(context).user.createdAt}",
               style: const TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w400,
@@ -78,7 +88,7 @@ class _MyProfileState extends State<MyProfile> {
                       style: TextStyle(color: Colors.grey, fontSize: 12),
                     ),
                     Text(
-                      user.name,
+                      "${Provider.of<LoginProvider>(context).user.firstName} ${Provider.of<LoginProvider>(context).user.lastName}",
                       style: const TextStyle(
                           fontWeight: FontWeight.w600, fontSize: 12),
                     ),
@@ -119,7 +129,7 @@ class _MyProfileState extends State<MyProfile> {
                       style: TextStyle(color: Colors.grey, fontSize: 12),
                     ),
                     Text(
-                      user.number,
+                      Provider.of<LoginProvider>(context).user.contact,
                       style: const TextStyle(
                           fontWeight: FontWeight.w600, fontSize: 12),
                     ),
@@ -160,7 +170,7 @@ class _MyProfileState extends State<MyProfile> {
                       style: TextStyle(color: Colors.grey, fontSize: 12),
                     ),
                     Text(
-                      user.email,
+                      Provider.of<LoginProvider>(context).user.email,
                       style: const TextStyle(
                           fontWeight: FontWeight.w600, fontSize: 12),
                     ),

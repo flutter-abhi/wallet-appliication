@@ -1,26 +1,26 @@
-import 'dart:ffi';
 
-class User {
-  String img;
-  String name;
-  String number;
-  String email;
-  String joinAt;
 
-  User(
-      {required this.img,
-      required this.name,
-      required this.email,
-      required this.number,
-      required this.joinAt});
-}
+// class User {
+//   String img;
+//   String name;
+//   String number;
+//   String email;
+//   String joinAt;
 
-User user = User(
-    img: "assets/users/user1.png",
-    name: " Rushikesh Kardile",
-    email: "Rushikesh9@gmail.com",
-    number: "9869868616",
-    joinAt: "2 Years Ago");
+//   User(
+//       {required this.img,
+//       required this.name,
+//       required this.email,
+//       required this.number,
+//       required this.joinAt});
+// }
+
+// User user = User(
+//     img: "assets/users/user1.png",
+//     name: " Rushikesh Kardile",
+//     email: "Rushikesh9@gmail.com",
+//     number: "9869868616",
+//     joinAt: "2 Years Ago");
 
 ///
 ///
